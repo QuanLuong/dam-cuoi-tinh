@@ -15,6 +15,23 @@
     tick(); setInterval(tick, 1000);
   }
 
+  // Cánh hoa rơi nhẹ
+  var box = document.querySelector(".petals");
+  if (box && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    var n = window.innerWidth < 700 ? 10 : 18;
+    for (var i = 0; i < n; i++) {
+      var p = document.createElement("i");
+      p.className = "petal";
+      var sc = 0.6 + Math.random() * 0.8, dur = 11 + Math.random() * 10;
+      p.style.left = Math.random() * 100 + "vw";
+      p.style.width = 14 * sc + "px"; p.style.height = 18 * sc + "px";
+      p.style.animationDuration = dur + "s, " + (3 + Math.random() * 3) + "s";
+      p.style.animationDelay = -Math.random() * dur + "s, 0s";
+      p.style.opacity = 0.45 + Math.random() * 0.4;
+      box.appendChild(p);
+    }
+  }
+
   // Xem ảnh lớn
   var lb = document.getElementById("lb");
   if (lb && lb.showModal) {

@@ -137,15 +137,19 @@ def page(cfg, guest, base, site_url):
 
   <section id="video" class="video">
     <h2 class="script">Our Story</h2>
-    <video controls playsinline preload="metadata" poster="{base}assets/img/poster.jpg">
-      <source src="{base}assets/video/video-cuoi-720p.mp4" type="video/mp4">
-    </video>
+    <div class="frame">
+      <video controls playsinline preload="metadata" poster="{base}assets/img/poster.jpg">
+        <source src="{base}assets/video/video-cuoi-720p.mp4" type="video/mp4">
+      </video>
+    </div>
   </section>
 
   <section class="info">
     <h2 class="script">Save the Date</h2>
-    <dl>{rows}</dl>
-    {map_btn}
+    <div class="card">
+      <dl>{rows}</dl>
+      {map_btn}
+    </div>
   </section>
 
   <section class="gallery">
@@ -160,6 +164,7 @@ def page(cfg, guest, base, site_url):
   </section>
 </main>
 
+<div class="petals" aria-hidden="true"></div>
 <dialog id="lb"><img alt=""><button class="x" aria-label="Đóng">×</button></dialog>
 <script src="{base}assets/app.js"></script>
 </body>
