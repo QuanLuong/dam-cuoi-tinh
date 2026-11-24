@@ -7,9 +7,20 @@
   "ngay_am_lich": "",
   "gio_don_khach": "",
   "gio_khai_tiec": "",
-  "ten_dia_diem": "",
-  "dia_chi": "",
-  "link_ban_do": "",
   "loi_moi": "Sự hiện diện của bạn là niềm vinh hạnh cho gia đình chúng mình.",
-  "lien_he": ""
+  "lien_he": "",
+  "nha_trai": {
+    "dia_chi": "",
+    "gio": "",
+    "link_ban_do": "https://maps.app.goo.gl/CYy89nHpDEnNatCQ8"
+  },
+  "nha_gai": {
+    "dia_chi": "",
+    "gio": "",
+    "link_ban_do": "https://maps.app.goo.gl/k1EBDkUGH3UX5q5r5"
+  },
+  "rsvp_url": "",
+  "_rsvp_huong_dan": "Dán link Web app của Google Apps Script (xem apps-script/HUONG-DAN.md) vào rsvp_url.",
+  "nhac_nen": "",
+  "_nhac_huong_dan": "Link file nhạc nền .mp3 (link trực tiếp), hoặc đặt file vào site/assets/music/ rồi ghi 'assets/music/ten-file.mp3'. Để trống thì ẩn nút nhạc."
 }

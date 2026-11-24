@@ -183,3 +183,91 @@ dialog#lb .x { position: fixed; top: 10px; right: 16px; background: none; border
   .lead { font-size: 21px; }
   .script { font-size: 52px; }
 }
+
+/* ---------- nhà trai / nhà gái ---------- */
+.places { display: grid; gap: 34px; max-width: 900px; margin: 46px auto 0; }
+@media (min-width: 760px) { .places { grid-template-columns: 1fr 1fr; } }
+.place { padding: 30px 24px 34px; }
+.place .pl-name { font-size: 50px; margin: 2px 0 6px; }
+.place .pl-name::after { display: none; }
+.pl-time { font-weight: 600; font-size: 22px; margin: 0; color: var(--gold); }
+.pl-addr { margin: 6px 0 0; font-size: 21px; }
+.place .btn { margin-top: 18px; }
+
+/* ---------- xác nhận tham dự ---------- */
+.rsvp-card {
+  --wine: #8c4a55;
+  position: relative; max-width: 560px; margin: 0 auto; padding: 38px 26px 34px; text-align: center;
+  background:
+    linear-gradient(rgba(255, 246, 244, .55), rgba(255, 246, 244, .55)),
+    radial-gradient(circle at 20% 15%, #fbe5e1, transparent 55%),
+    radial-gradient(circle at 85% 80%, #f6d6d1, transparent 55%),
+    #f3d3cd;
+  border: 10px solid #fffaf5; border-radius: 6px;
+  box-shadow: 0 24px 60px rgba(140, 74, 85, .18), inset 0 0 0 1px rgba(140, 74, 85, .15);
+}
+.rsvp-card::before {
+  content: ""; position: absolute; top: -34px; left: 50%; width: 120px; height: 60px; transform: translateX(-50%);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 60'%3E%3Cg fill='%23fffaf5' stroke='%23e3b9b1' stroke-width='1.2'%3E%3Cpath d='M60 30C40 4 10 6 12 26c2 16 30 12 48 4z'/%3E%3Cpath d='M60 30C80 4 110 6 108 26c-2 16-30 12-48 4z'/%3E%3Cpath d='M57 32L40 58l10-2 8 4zM63 32l17 26-10-2-8 4z'/%3E%3Cellipse cx='60' cy='30' rx='7' ry='8'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 4px 6px rgba(140, 74, 85, .2));
+}
+.rsvp-intro { color: var(--wine); font-size: 20px; margin: 4px 0 22px; }
+.pill {
+  display: block; width: 100%; margin: 0 0 14px; padding: 13px 22px;
+  font: inherit; font-size: 20px; color: var(--wine);
+  background: rgba(255, 250, 248, .55); border: 1.5px solid var(--wine); border-radius: 28px;
+  outline: none; transition: background .3s, box-shadow .3s; resize: vertical; text-align: left;
+}
+.pill::placeholder { color: rgba(140, 74, 85, .75); }
+.pill:focus { background: rgba(255, 252, 250, .9); box-shadow: 0 0 0 4px rgba(140, 74, 85, .12); }
+select.pill { appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%238c4a55' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 22px center; }
+.choices { padding: 12px 22px; border-radius: 26px; }
+.choices label { display: flex; align-items: center; gap: 12px; padding: 5px 0; cursor: pointer; }
+.choices input { appearance: none; width: 20px; height: 20px; margin: 0; border: 1.5px solid #9b8f8f; border-radius: 50%; background: #fff; flex: none; transition: .2s; }
+.choices input:checked { border: 6px solid var(--wine); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.send {
+  width: 100%; margin-top: 10px; padding: 15px 18px; cursor: pointer;
+  font: 600 clamp(17px, 4.6vw, 22px) "Cormorant", serif; letter-spacing: .04em; text-transform: uppercase;
+  color: #fff8f6; background: linear-gradient(115deg, #8c4a55, #b46f78 50%, #8c4a55); background-size: 200% 100%;
+  border: 0; border-radius: 30px; box-shadow: 0 10px 24px rgba(140, 74, 85, .3); transition: background-position .6s, opacity .3s;
+}
+.send:hover { background-position: 100% 0; }
+.send:disabled { opacity: .6; cursor: wait; }
+.rsvp-msg { min-height: 1.4em; margin: 14px 0 0; color: var(--wine); font-style: italic; }
+.rsvp-card.done .pill, .rsvp-card.done .send, .rsvp-card.done .rsvp-intro { display: none; }
+.rsvp-card.done .rsvp-msg { font-size: 24px; }
+select.pill { padding-right: 46px; text-overflow: ellipsis; }
+@media (max-width: 480px) {
+  .pill { font-size: 18px; padding: 12px 18px; }
+  select.pill { padding-right: 40px; background-position: right 16px center; }
+  .info .row { grid-template-columns: 70px 1fr; }
+  .info dd { font-size: 21px; }
+}
+
+/* ---------- nút nhạc nền ---------- */
+.music {
+  position: fixed; left: 18px; bottom: 18px; z-index: 20; width: 54px; height: 54px; padding: 0;
+  display: grid; place-items: center; cursor: pointer; color: #2b211c;
+  background: #fffdf9; border: 2px solid #2b211c; border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(60, 40, 30, .25);
+}
+.music svg { width: 28px; height: 28px; transition: transform .3s; }
+.music.on svg { animation: spin 3.2s linear infinite; }
+.music:not(.on)::after {               /* gạch chéo khi đang tắt */
+  content: ""; position: absolute; width: 34px; height: 2px; background: #2b211c; transform: rotate(-45deg); border-radius: 2px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.music .notes { position: absolute; left: 50%; bottom: 100%; width: 0; height: 0; pointer-events: none; }
+.music .notes i {
+  position: absolute; left: -6px; bottom: 0; font-style: normal; font-size: 18px; color: #3a2c25; opacity: 0; text-shadow: 0 0 6px #fff, 0 0 2px #fff;
+  animation: rise 2.6s ease-out forwards;
+}
+@keyframes rise {
+  0% { transform: translate(0, 0) scale(.6); opacity: 0; }
+  15% { opacity: .9; }
+  100% { transform: translate(var(--dx, 0), -90px) scale(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .music.on svg { animation: none; } .music .notes { display: none; } }

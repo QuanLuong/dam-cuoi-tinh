@@ -58,10 +58,6 @@ def info_rows(cfg):
         rows.append(("Đón khách", cfg["gio_don_khach"]))
     if cfg.get("gio_khai_tiec"):
         rows.append(("Khai tiệc", cfg["gio_khai_tiec"]))
-    if cfg.get("ten_dia_diem"):
-        rows.append(("Địa điểm", cfg["ten_dia_diem"]))
-    if cfg.get("dia_chi"):
-        rows.append(("Địa chỉ", cfg["dia_chi"]))
     if cfg.get("lien_he"):
         rows.append(("Liên hệ", cfg["lien_he"]))
     return rows
@@ -84,8 +80,29 @@ def page(cfg, guest, base, site_url):
     couple_html = f'<p class="couple">{esc(couple)}</p>' if couple else ""
     desc = f"Tới dự lễ thành hôn{(' của ' + couple) if couple else ' của chúng mình'} — {date_txt}"
     rows = "".join(f"<div class=\"row\"><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in info_rows(cfg))
-    map_btn = (f'<a class="btn" href="{esc(cfg["link_ban_do"])}" target="_blank" rel="noopener">Xem bản đồ</a>'
-               if cfg.get("link_ban_do") else "")
+    places = ""
+    for key, label in (("nha_trai", "Nhà Trai"), ("nha_gai", "Nhà Gái")):
+        pl = cfg.get(key) or {}
+        if not any(pl.values()):
+            continue
+        body = ""
+        if pl.get("gio"):
+            body += f'<p class="pl-time">{esc(pl["gio"])}</p>'
+        if pl.get("dia_chi"):
+            body += f'<p class="pl-addr">{esc(pl["dia_chi"])}</p>'
+        if pl.get("link_ban_do"):
+            body += (f'<a class="btn" href="{esc(pl["link_ban_do"])}" target="_blank" rel="noopener">'
+                     f'Chỉ đường</a>')
+        places += f'<div class="card place"><p class="caps gold">Tư gia</p><h3 class="script pl-name">{label}</h3>{body}</div>'
+    rsvp_url = esc(cfg.get("rsvp_url", ""))
+    music = cfg.get("nhac_nen", "").strip()
+    if music and not re.match(r"^https?://", music):
+        music = base + music.lstrip("/")
+    music_btn = (f'<button class="music" type="button" data-src="{esc(music)}" aria-label="Bật/tắt nhạc nền" aria-pressed="false">'
+                 '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V6.2l10-2.2v11.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
+                 '<ellipse cx="6.6" cy="17.6" rx="2.6" ry="2.1" fill="currentColor"/><ellipse cx="16.6" cy="15.4" rx="2.6" ry="2.1" fill="currentColor"/></svg>'
+                 '<span class="notes" aria-hidden="true"></span></button>') if music else ""
+    guest_tag = esc(f"{guest['xung_ho']} {guest['ten']}".strip() if guest else "")
     gallery = "".join(
         f'<button class="ph" data-full="{base}assets/img/g{i:02d}.jpg" aria-label="Xem ảnh {i}">'
         f'<img src="{base}assets/img/g{i:02d}.jpg" alt="Ảnh cưới {i}" loading="lazy"></button>'
@@ -148,8 +165,33 @@ def page(cfg, guest, base, site_url):
     <h2 class="script">Save the Date</h2>
     <div class="card">
       <dl>{rows}</dl>
-      {map_btn}
     </div>
+    <div class="places">{places}</div>
+  </section>
+
+  <section id="rsvp" class="rsvp">
+    <h2 class="script">Xác nhận tham dự</h2>
+    <form class="rsvp-card" data-url="{rsvp_url}" data-guest="{guest_tag}" novalidate>
+      <p class="rsvp-intro">Hãy xác nhận sự có mặt của bạn để chúng mình chuẩn bị đón tiếp một cách chu đáo nhất.<br>Trân trọng!</p>
+      <input class="pill" name="ten" placeholder="Tên của bạn" value="{esc(who)}" required maxlength="80" autocomplete="name">
+      <textarea class="pill" name="loi_nhan" placeholder="Lời nhắn của bạn đến cô dâu, chú rể" rows="2" maxlength="500"></textarea>
+      <fieldset class="pill choices">
+        <legend class="sr">Bạn có tham dự không?</legend>
+        <label><input type="radio" name="tham_du" value="Sẽ tham dự" required> Mình sẽ tham dự</label>
+        <label><input type="radio" name="tham_du" value="Bận mất rồi"> Thật tiếc mình bận mất rồi</label>
+        <label><input type="radio" name="tham_du" value="Đang cân nhắc"> Mình đang cân nhắc</label>
+      </fieldset>
+      <select class="pill" name="so_nguoi" aria-label="Số người tham dự">
+        <option value="" selected disabled>Bạn sẽ tham dự cùng mấy người?</option>
+        <option>1 người (chỉ mình mình)</option>
+        <option>2 người</option>
+        <option>3 người</option>
+        <option>4 người</option>
+        <option>5 người trở lên</option>
+      </select>
+      <button class="send" type="submit">Gửi lời nhắn và xác nhận</button>
+      <p class="rsvp-msg" role="status" aria-live="polite"></p>
+    </form>
   </section>
 
   <section class="gallery">
@@ -164,6 +206,7 @@ def page(cfg, guest, base, site_url):
   </section>
 </main>
 
+{music_btn}
 <div class="petals" aria-hidden="true"></div>
 <dialog id="lb"><img alt=""><button class="x" aria-label="Đóng">×</button></dialog>
 <script src="{base}assets/app.js"></script>

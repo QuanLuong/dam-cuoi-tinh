@@ -5,7 +5,7 @@
 Slideshow 1920×1080, 30fps, dựng từ 26 ảnh cưới (thư mục Google Drive `WEDDING/Vân Anh`) với nhạc nền
 "NHẠC CÔ DÂU CHÚ RỂ LÊN SÂN KHẤU" (bài đầu tiên trong file mix). File `TINH-ANH.mp4` không được dùng.
 
-Bố cục video (~2 phút 10 giây):
+Bố cục video (~2 phút 57 giây), có 8 kiểu chuyển cảnh: đẩy ngang, mở vòng tròn, zoom, lau chéo, chớp sáng, nhòe mờ, trượt lên, vệt nắng:
 - **Intro**: "Save the Date — Chúng mình kết hôn — 24 . 12 . 2026 — Thứ Năm"
 - **Ảnh**: theo thứ tự chụp, xen kẽ 3 kiểu cảnh: ảnh có khung trên nền mờ, ảnh cận cảnh tràn màn hình
   (lia máy chậm), và cảnh chia đôi có chữ ("Gặp gỡ", "Yêu thương", "Hẹn ước", "Ngày chung đôi").
@@ -27,10 +27,15 @@ Font (Google Fonts, giấy phép OFL) nằm trong `fonts/`.
 
 Mỗi khách có một trang riêng ghi tên mình, kèm video, đếm ngược, thông tin tiệc và album ảnh.
 
-- `wedding.json`: tên cô dâu chú rể, giờ, địa điểm, link bản đồ… (để trống thì tự ẩn)
+- `wedding.json`: tên cô dâu chú rể, giờ, địa chỉ và link bản đồ của nhà trai / nhà gái, link form xác nhận `rsvp_url` (trường nào để trống thì tự ẩn)
 - `guests.csv`: danh sách khách, mỗi dòng gồm `xung_ho,ten,duong_dan` (cột `duong_dan` có thể bỏ trống, khi đó link được tạo tự động từ tên, ví dụ "Anh Nam" → `/anh-nam/`)
 
 Sửa hai file trên rồi push, GitHub Actions sẽ tự dựng lại trang. Danh sách link của từng khách nằm ở mục
 **Actions → lần chạy mới nhất → Summary**.
 
 Bật lần đầu: **Settings → Pages → Source: GitHub Actions** (repo cần ở chế độ Public nếu dùng tài khoản miễn phí).
+
+## Xác nhận tham dự → Google Sheet
+
+Form trên thiệp (tên, lời nhắn, tham dự / bận / cân nhắc, số người) ghi vào Google Sheet qua Google Apps Script.
+Hướng dẫn cài đặt nằm ở [`apps-script/HUONG-DAN.md`](apps-script/HUONG-DAN.md).

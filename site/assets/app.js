@@ -32,6 +32,75 @@
     }
   }
 
+  // Xác nhận tham dự -> Google Sheet (qua Google Apps Script)
+  var form = document.querySelector(".rsvp-card");
+  if (form) {
+    var msg = form.querySelector(".rsvp-msg");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var fd = new FormData(form);
+      if (!String(fd.get("ten") || "").trim()) { msg.textContent = "Bạn cho chúng mình biết tên nhé."; return; }
+      if (!fd.get("tham_du")) { msg.textContent = "Bạn chọn giúp chúng mình một lựa chọn tham dự nhé."; return; }
+      if (!form.dataset.url) { msg.textContent = "Chức năng xác nhận đang được chuẩn bị, bạn quay lại sau nhé!"; return; }
+      fd.append("khach_moi", form.dataset.guest || "(trang chung)");
+      fd.append("trang", location.href);
+      var btn = form.querySelector(".send");
+      btn.disabled = true; msg.textContent = "Đang gửi…";
+      fetch(form.dataset.url, { method: "POST", mode: "no-cors", body: new URLSearchParams(fd) })
+        .then(function () {
+          form.classList.add("done");
+          msg.textContent = fd.get("tham_du") === "Sẽ tham dự"
+            ? "Cảm ơn " + fd.get("ten") + "! Hẹn gặp bạn trong ngày vui nhé ♥"
+            : "Cảm ơn " + fd.get("ten") + " đã gửi lời nhắn tới chúng mình ♥";
+        })
+        .catch(function () { msg.textContent = "Gửi chưa được, bạn thử lại giúp chúng mình nhé."; })
+        .then(function () { btn.disabled = false; });
+    });
+  }
+
+  // Nhạc nền: phát từ lần chạm/cuộn đầu tiên (trình duyệt chặn tự phát), nút ở góc trái dưới
+  var mb = document.querySelector(".music");
+  if (mb) {
+    var audio = new Audio(mb.dataset.src);
+    audio.loop = true; audio.preload = "auto"; audio.volume = 0.7;
+    var userOff = false, noteTimer = null, notesBox = mb.querySelector(".notes");
+    var glyphs = ["♪", "♫", "♩", "♬"];
+    var spawn = function () {
+      var n = document.createElement("i");
+      n.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      n.style.setProperty("--dx", (Math.random() * 30 - 15) + "px");
+      notesBox.appendChild(n);
+      setTimeout(function () { n.remove(); }, 2700);
+    };
+    var setUi = function (on) {
+      mb.classList.toggle("on", on); mb.setAttribute("aria-pressed", on);
+      clearInterval(noteTimer);
+      if (on) { spawn(); noteTimer = setInterval(spawn, 700); }
+    };
+    var play = function () { return audio.play().then(function () { setUi(true); }).catch(function () {}); };
+    var pause = function () { audio.pause(); setUi(false); };
+    mb.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (audio.paused) { userOff = false; play(); } else { userOff = true; pause(); }
+    });
+    var kick = function () {
+      if (!userOff && audio.paused) play();
+      ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.removeEventListener(ev, kick); });
+    };
+    ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.addEventListener(ev, kick, { passive: true }); });
+    play();  // thử tự phát (một số trình duyệt cho phép)
+    // tạm dừng nhạc khi xem video cưới, phát lại khi video dừng
+    var vid = document.querySelector("video");
+    if (vid) {
+      vid.addEventListener("play", function () { if (!audio.paused) { pause(); vid._resume = true; } });
+      vid.addEventListener("pause", function () { if (vid._resume && !userOff) { vid._resume = false; play(); } });
+    }
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden && !audio.paused) { pause(); audio._bg = true; }
+      else if (!document.hidden && audio._bg) { audio._bg = false; if (!userOff) play(); }
+    });
+  }
+
   // Xem ảnh lớn
   var lb = document.getElementById("lb");
   if (lb && lb.showModal) {

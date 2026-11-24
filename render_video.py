@@ -14,11 +14,13 @@ import subprocess
 from functools import lru_cache
 from multiprocessing import Pool
 
+import numpy as np
+
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps, ImageEnhance
 
 W, H = 1920, 1080
 FPS = 30
-TRANS = 1.2           # thời lượng chuyển cảnh (giây)
+TRANS = 1.5           # thời lượng chuyển cảnh (giây)
 SS = 1.25             # hệ số siêu mẫu cho ảnh nguồn
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONT_DIR = os.path.join(HERE, "fonts")
@@ -189,21 +191,23 @@ def build_script(photos):
                                   ("rule", ""), ("gap", ""), ("date", WEDDING_DATE),
                                   ("caps", WEDDING_DAY)]),
     }
-    slides = [Slide("intro", cover, 9.0)]
+    slides = [Slide("intro", cover, 10.5)]
     flip = False
     for name in order:
         p = by[name]
         if name in full:
-            slides.append(Slide("full", p, 5.6, y=full[name]))
+            slides.append(Slide("full", p, 7.6, y=full[name]))
         elif name in split:
             side, lines = split[name]
-            slides.append(Slide("split", p, 6.8, side=side, lines=lines))
+            slides.append(Slide("split", p, 8.4, side=side, lines=lines))
         else:
             flip = not flip
-            slides.append(Slide("center", p, 5.4, drift=1 if flip else -1))
-    slides.append(Slide("outro", by["BTT_3457.jpg"], 10.0))
+            slides.append(Slide("center", p, 7.6, drift=1 if flip else -1))
+    slides.append(Slide("outro", by["BTT_3457.jpg"], 12.0))
     t = 0.0
-    for s in slides:
+    for k, s in enumerate(slides):
+        # kiểu chuyển cảnh khi cảnh này xuất hiện
+        s.trans = "fade" if k in (0, 1, len(slides) - 1) else TRANSITIONS[(k - 2) % len(TRANSITIONS)]
         s.start = t
         t += s.dur - TRANS
     total = t + TRANS
@@ -301,6 +305,67 @@ def slide_frame(idx, t_local):
     return fr.convert("RGB")
 
 
+TRANSITIONS = ["push", "iris", "zoom", "wipe", "light", "blur", "slide_up", "leak"]
+
+_YY, _XX = np.mgrid[0:H, 0:W].astype(np.float32)
+_R = np.sqrt((_XX - W / 2) ** 2 + (_YY - H / 2) ** 2) / math.hypot(W / 2, H / 2)
+_DIAG = (_XX / W * 0.75 + _YY / H * 0.25)
+
+
+def _mix(a, b, m):
+    """Trộn 2 ảnh numpy theo mặt nạ m (0..1, HxW)."""
+    return a * (1 - m[..., None]) + b * m[..., None]
+
+
+def transition(kind, A, B, p):
+    """A: cảnh cũ, B: cảnh mới (PIL), p: tiến độ 0..1 (đã làm mượt)."""
+    if kind == "fade":
+        return Image.blend(A, B, p)
+    a = np.asarray(A, dtype=np.float32)
+    b = np.asarray(B, dtype=np.float32)
+    if kind == "push":                       # cảnh mới đẩy cảnh cũ sang trái
+        off = int(round(W * p))
+        out = np.empty_like(a)
+        out[:, :W - off] = a[:, off:]
+        out[:, W - off:] = b[:, :off]
+        return Image.fromarray(out.astype(np.uint8))
+    if kind == "slide_up":                   # cảnh mới trượt lên phủ cảnh cũ, cảnh cũ tối dần
+        off = int(round(H * (1 - p)))
+        out = a * (1 - 0.5 * p)
+        out[off:] = b[:H - off]
+        return Image.fromarray(out.astype(np.uint8))
+    if kind == "iris":                       # vòng tròn mở rộng từ giữa, viền mềm
+        m = np.clip((p * 1.15 - _R) / 0.12, 0, 1)
+        return Image.fromarray(_mix(a, b, m).astype(np.uint8))
+    if kind == "wipe":                       # lau chéo viền mềm
+        m = np.clip((p * 1.3 - _DIAG) / 0.3, 0, 1)
+        return Image.fromarray(_mix(a, b, m).astype(np.uint8))
+    if kind == "light":                      # chớp sáng trắng ngà
+        flash = np.array([255, 246, 232], np.float32)
+        w = 1 - abs(2 * p - 1)
+        base = a if p < 0.5 else b
+        return Image.fromarray((base * (1 - w) + flash * w).astype(np.uint8))
+    if kind == "zoom":                       # cảnh cũ phóng to mờ dần, cảnh mới thu từ lớn về
+        za = A.resize((int(W * (1 + 0.25 * p)), int(H * (1 + 0.25 * p))), Image.BILINEAR)
+        za = za.crop(((za.width - W) // 2, (za.height - H) // 2, (za.width - W) // 2 + W, (za.height - H) // 2 + H))
+        sb = 1 + 0.12 * (1 - p)
+        zb = B.resize((int(W * sb), int(H * sb)), Image.BILINEAR)
+        zb = zb.crop(((zb.width - W) // 2, (zb.height - H) // 2, (zb.width - W) // 2 + W, (zb.height - H) // 2 + H))
+        return Image.blend(za, zb, p)
+    if kind == "blur":                       # nhòe mờ chuyển tiêu điểm
+        r = 18 * (1 - abs(2 * p - 1))
+        mix = Image.blend(A, B, p)
+        return mix.filter(ImageFilter.GaussianBlur(r)) if r > 0.5 else mix
+    if kind == "leak":                       # vệt nắng ấm quét ngang
+        out = a * (1 - p) + b * p
+        cx = -0.3 + 1.6 * p
+        band = np.exp(-((_XX / W - cx) ** 2) / 0.03) * (1 - abs(2 * p - 1))
+        warm = np.array([255, 196, 140], np.float32)
+        out = out + (warm - out) * (band[..., None] * 0.75)
+        return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
+    return Image.blend(A, B, p)
+
+
 def render(i):
     t = i / FPS
     act = [k for k, s in enumerate(SLIDES) if s.start <= t < s.start + s.dur]
@@ -311,7 +376,7 @@ def render(i):
     if len(act) > 1:
         j = act[0]
         prev = slide_frame(j, t - SLIDES[j].start)
-        fr = Image.blend(prev, fr, ease((t - SLIDES[k].start) / TRANS))
+        fr = transition(SLIDES[k].trans, prev, fr, ease((t - SLIDES[k].start) / TRANS))
     # mở đầu từ đen, kết thúc về đen
     a = min(1.0, t / 1.5, (TOTAL - t) / 2.5)
     if a < 1:
