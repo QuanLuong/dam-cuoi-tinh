@@ -19,7 +19,7 @@
     "gio": "",
     "link_ban_do": "https://maps.app.goo.gl/k1EBDkUGH3UX5q5r5"
   },
-  "rsvp_url": "",
+  "rsvp_url": "https://script.google.com/macros/s/AKfycbx8mmc0br5PciaTHS8UbC_bU8kXGcGXEDn3sUzuHvO8QNPkq-Cya7KrGWwa-3PUA_F7/exec",
   "_rsvp_huong_dan": "Dán link Web app của Google Apps Script (xem apps-script/HUONG-DAN.md) vào rsvp_url.",
   "nhac_nen": "",
   "_nhac_huong_dan": "Link file nhạc nền .mp3 (link trực tiếp), hoặc đặt file vào site/assets/music/ rồi ghi 'assets/music/ten-file.mp3'. Để trống thì ẩn nút nhạc."
