@@ -1,24 +1,41 @@
 {
   "_huong_dan": "Sửa các giá trị bên dưới rồi push lên GitHub. Trường nào để trống sẽ tự ẩn trên thiệp.",
-  "chu_re": "",
-  "co_dau": "",
+  "chu_re": "Hoàng Tình",
+  "co_dau": "Vân Anh",
   "ngay_cuoi": "2026-12-24",
+  "gio_cuoi": "09:30",
   "thu": "Thứ Năm",
-  "ngay_am_lich": "",
-  "gio_don_khach": "",
-  "gio_khai_tiec": "",
-  "loi_moi": "Sự hiện diện của bạn là niềm vinh hạnh cho gia đình chúng mình.",
-  "lien_he": "",
+  "loi_moi": "Sự hiện diện của Quý vị là niềm vinh hạnh cho gia đình chúng tôi!",
   "nha_trai": {
-    "dia_chi": "",
-    "gio": "",
+    "ong": "Hoàng Văn Hồng",
+    "ba": "Tống Thị Hải",
+    "dia_chi": "TDP Thanh Xuân - P. Ngọc Sơn - Tỉnh Thanh Hóa",
     "link_ban_do": "https://maps.app.goo.gl/CYy89nHpDEnNatCQ8"
   },
   "nha_gai": {
-    "dia_chi": "",
-    "gio": "",
+    "ong": "Nguyễn Trọng Hưng",
+    "ba": "Lâm Thị Vịnh",
+    "dia_chi": "TDP Hải An - P. Tân Dân - Tỉnh Thanh Hóa",
     "link_ban_do": "https://maps.app.goo.gl/k1EBDkUGH3UX5q5r5"
   },
+  "su_kien": [
+    {
+      "ten": "Lễ Nạp Tài",
+      "gio": "08 giờ 25",
+      "thu": "Chủ Nhật",
+      "ngay": "2026-12-20",
+      "am_lich": "Tức ngày 12 tháng 11 năm Bính Ngọ",
+      "tai": "nha_gai"
+    },
+    {
+      "ten": "Lễ Thành Hôn",
+      "gio": "09 giờ 30",
+      "thu": "Thứ Năm",
+      "ngay": "2026-12-24",
+      "am_lich": "Tức ngày 16 tháng 11 năm Bính Ngọ",
+      "tai": "nha_trai"
+    }
+  ],
   "rsvp_url": "https://script.google.com/macros/s/AKfycbw-ttusg28FiZREdKd-mCbWiFnMJx77A8Ekp0f5bzdK5Hk4nwKoPY13ji0JiYvMqAA/exec",
   "_rsvp_huong_dan": "Dán link Web app của Google Apps Script (xem apps-script/HUONG-DAN.md) vào rsvp_url.",
   "nhac_nen": "assets/music/nhac-nen.m4a",

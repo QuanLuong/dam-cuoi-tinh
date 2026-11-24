@@ -358,10 +358,11 @@ def build():
     # 2. Tiêu đề + ảnh
     S.append(Scene(8.5, [
         P("@.jpg", 1010, 0, 910, H, 0.0, "right", 0.35),
-        T("Our Wedding", FANCY, 150, 505, 400, 0.6, "up"),
-        T("&", FANCY, 70, 505, 520, 1.0, "fade", SOFT),
-        T("Chúng mình kết hôn", q, 64, 505, 610, 1.3, "up"),
+        T("Hoàng Tình", FANCY, 140, 505, 300, 0.6, "up"),
+        T("&", FANCY, 80, 505, 430, 1.0, "fade", SOFT),
+        T("Vân Anh", FANCY, 140, 505, 550, 1.3, "up"),
         T("WELCOME TO OUR WEDDING!", CAPS, 26, 505, 730, 1.9, "fade", INK, 8),
+        T("24 . 12 . 2026", SERIF, 40, 505, 800, 2.2, "fade", SOFT, 6),
     ], "push", date=False))
     # 3. Ba ảnh + số ngày
     els = []
@@ -436,7 +437,7 @@ def build():
     ], "light"))
     # 14. Ba ảnh: Anh & Em
     els = []
-    for i, (n, w) in enumerate([("BTT_3093.jpg", "Anh"), ("BTT_3183.jpg", "&"), ("BTT_3143.jpg", "Em")]):
+    for i, (n, w) in enumerate([("BTT_3093.jpg", "Tình"), ("BTT_3183.jpg", "&"), ("BTT_3143.jpg", "Vân Anh")]):
         x = 150 + i * 560
         els.append(P(n, x, 60, 500, 760, 0.2 + i * 0.3, "down", 0.25))
         els.append(T(w, FANCY, 140, x + 250, 920, 1.1 + i * 0.3, "up"))
@@ -493,8 +494,9 @@ def build():
     # 23. Thank you
     S.append(Scene(8.0, [
         P("BTT_3339.jpg", 760, 120, 400, 560, 0.1, "fade", 0.25),
-        T("Thank you", FANCY, 170, W / 2, 810, 0.8, "up"),
-        *HEARTS(W / 2, 950, 1.6),
+        T("Thank you", FANCY, 170, W / 2, 790, 0.8, "up"),
+        T("Hoàng Tình  &  Vân Anh", SCRIPT, 56, W / 2, 925, 1.5, "fade", SOFT),
+        *HEARTS(W / 2, 1010, 2.0),
     ], "fade", date=False))
 
     t = 0.0

@@ -49,18 +49,47 @@ def load():
     return cfg, guests
 
 
-def info_rows(cfg):
-    d = date.fromisoformat(cfg["ngay_cuoi"])
-    rows = [("Ngày", f"{cfg.get('thu', '')}, {d.day:02d} . {d.month:02d} . {d.year}".strip(", "))]
-    if cfg.get("ngay_am_lich"):
-        rows.append(("Âm lịch", cfg["ngay_am_lich"]))
-    if cfg.get("gio_don_khach"):
-        rows.append(("Đón khách", cfg["gio_don_khach"]))
-    if cfg.get("gio_khai_tiec"):
-        rows.append(("Khai tiệc", cfg["gio_khai_tiec"]))
-    if cfg.get("lien_he"):
-        rows.append(("Liên hệ", cfg["lien_he"]))
-    return rows
+def invite_html(cfg, who):
+    """Thiệp mời: đếm ngược, bố mẹ hai bên, lời mời, các lễ."""
+    def fam(key, label):
+        f = cfg.get(key) or {}
+        rows = "".join(f"<p>{t}: {esc(f[k])}</p>" for k, t in (("ong", "Ông"), ("ba", "Bà")) if f.get(k))
+        addr = f'<p class="fam-addr">{esc(f["dia_chi"])}</p>' if f.get("dia_chi") else ""
+        return f'<div class="fam"><h3>{label}</h3>{rows}{addr}</div>'
+
+    events = ""
+    for ev in cfg.get("su_kien", []):
+        d = date.fromisoformat(ev["ngay"])
+        place = cfg.get(ev.get("tai", ""), {}) or {}
+        where = {"nha_trai": "Tư gia nhà trai", "nha_gai": "Tư gia nhà gái"}.get(ev.get("tai"), ev.get("tai", ""))
+        btn = (f'<a class="route" href="{esc(place["link_ban_do"])}" target="_blank" rel="noopener">'
+               '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2z" fill="currentColor"/></svg>'
+               'Xem chỉ đường</a>') if place.get("link_ban_do") else ""
+        events += f'''<div class="event">
+      <h3 class="ev-name">{esc(ev["ten"])}</h3>
+      <p class="ev-when">Vào lúc:<br>{esc(ev.get("gio", ""))} - {esc(ev.get("thu", ""))}</p>
+      <div class="ev-date"><span>Tháng {d.month}</span><b>{d.day:02d}</b><span>Năm {d.year}</span></div>
+      {f'<p class="ev-lunar">( {esc(ev["am_lich"])} )</p>' if ev.get("am_lich") else ""}
+      <p class="ev-at">Tại: {esc(where)}</p>
+      {f'<p class="ev-addr">{esc(place["dia_chi"])}</p>' if place.get("dia_chi") else ""}
+      {btn}
+    </div>'''
+    target = f"{cfg['ngay_cuoi']}T{cfg.get('gio_cuoi', '00:00')}:00+07:00"
+    guest_line = esc(who) if who else "Quý khách"
+    return f'''<section class="invite" id="thiep-moi">
+    <p class="iv-script">Đếm ngược thời gian cùng chúng mình nha!</p>
+    <div class="seg" data-date="{target}">
+      <div><b id="d">00</b><span>Ngày</span></div><i>:</i>
+      <div><b id="h">00</b><span>Giờ</span></div><i>:</i>
+      <div><b id="m">00</b><span>Phút</span></div><i>:</i>
+      <div><b id="s">00</b><span>Giây</span></div>
+    </div>
+    <div class="fams">{fam("nha_gai", "Nhà Gái")}{fam("nha_trai", "Nhà Trai")}</div>
+    <p class="iv-invite">Trân trọng kính mời {guest_line}<br>tới dự bữa cơm thân mật mừng lễ thành hôn của hai con chúng tôi</p>
+    <p class="iv-couple">{esc(cfg.get("chu_re", ""))}<span>&amp;</span>{esc(cfg.get("co_dau", ""))}</p>
+    {events}
+    <p class="iv-thanks">Rất hân hạnh được đón tiếp!</p>
+  </section>'''
 
 
 def page(cfg, guest, base, site_url):
@@ -79,21 +108,6 @@ def page(cfg, guest, base, site_url):
         url = f"{site_url}/" if site_url else ""
     couple_html = f'<p class="couple">{esc(couple)}</p>' if couple else ""
     desc = f"Tới dự lễ thành hôn{(' của ' + couple) if couple else ' của chúng mình'} — {date_txt}"
-    rows = "".join(f"<div class=\"row\"><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in info_rows(cfg))
-    places = ""
-    for key, label in (("nha_trai", "Nhà Trai"), ("nha_gai", "Nhà Gái")):
-        pl = cfg.get(key) or {}
-        if not any(pl.values()):
-            continue
-        body = ""
-        if pl.get("gio"):
-            body += f'<p class="pl-time">{esc(pl["gio"])}</p>'
-        if pl.get("dia_chi"):
-            body += f'<p class="pl-addr">{esc(pl["dia_chi"])}</p>'
-        if pl.get("link_ban_do"):
-            body += (f'<a class="btn" href="{esc(pl["link_ban_do"])}" target="_blank" rel="noopener">'
-                     f'Chỉ đường</a>')
-        places += f'<div class="card place"><p class="caps gold">Tư gia</p><h3 class="script pl-name">{label}</h3>{body}</div>'
     rsvp_url = esc(cfg.get("rsvp_url", ""))
     gate = (f'''<div class="gate" role="dialog" aria-label="Mở thiệp mời">
   <div class="gate-card">
@@ -153,15 +167,7 @@ def page(cfg, guest, base, site_url):
 </header>
 
 <main>
-  <section class="count" aria-label="Đếm ngược">
-    <p class="caps gold">Còn lại</p>
-    <div class="cd" data-date="{iso}T00:00:00+07:00">
-      <div><b id="d">–</b><span>ngày</span></div>
-      <div><b id="h">–</b><span>giờ</span></div>
-      <div><b id="m">–</b><span>phút</span></div>
-      <div><b id="s">–</b><span>giây</span></div>
-    </div>
-  </section>
+  {invite_html(cfg, who)}
 
   <section id="video" class="video">
     <h2 class="script">Our Story</h2>
@@ -170,14 +176,6 @@ def page(cfg, guest, base, site_url):
         <source src="{base}assets/video/video-cuoi-720p.mp4" type="video/mp4">
       </video>
     </div>
-  </section>
-
-  <section class="info">
-    <h2 class="script">Save the Date</h2>
-    <div class="card">
-      <dl>{rows}</dl>
-    </div>
-    <div class="places">{places}</div>
   </section>
 
   <section id="rsvp" class="rsvp">

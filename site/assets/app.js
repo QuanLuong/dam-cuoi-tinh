@@ -1,13 +1,13 @@
 (function () {
   // Đếm ngược tới ngày cưới
-  var cd = document.querySelector(".cd");
+  var cd = document.querySelector(".seg, .cd");
   if (cd) {
     var target = new Date(cd.dataset.date).getTime();
     var el = { d: document.getElementById("d"), h: document.getElementById("h"),
                m: document.getElementById("m"), s: document.getElementById("s") };
     var tick = function () {
       var t = Math.max(0, target - Date.now()) / 1000;
-      el.d.textContent = Math.floor(t / 86400);
+      el.d.textContent = String(Math.floor(t / 86400)).padStart(2, "0");
       el.h.textContent = String(Math.floor(t / 3600) % 24).padStart(2, "0");
       el.m.textContent = String(Math.floor(t / 60) % 60).padStart(2, "0");
       el.s.textContent = String(Math.floor(t) % 60).padStart(2, "0");

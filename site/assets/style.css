@@ -310,3 +310,47 @@ select.pill { padding-right: 46px; text-overflow: ellipsis; }
 .gate-hint { margin-top: 18px; color: var(--muted); }
 .gate-date { font-weight: 600; font-size: 26px; letter-spacing: .1em; color: var(--gold); margin: 10px 0 0; }
 body.locked { overflow: hidden; }
+
+/* ---------- thiệp mời (đếm ngược, bố mẹ, các lễ) ---------- */
+@font-face { font-family: "DSEG7"; src: url(fonts/DSEG7Modern-Regular.woff2) format("woff2"); font-display: swap; }
+.invite {
+  --wine: #8c4a55;
+  color: var(--wine);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 0h6v1H0zM0 0v6h1V0z' fill='%23b9a99c' fill-opacity='.10'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, transparent, rgba(244, 238, 232, .9) 8%, rgba(244, 238, 232, .9) 92%, transparent) !important;
+  font-size: 22px;
+}
+.iv-script { font-family: "Great Vibes", cursive; font-size: clamp(36px, 9vw, 58px); line-height: 1.2; margin: 0 0 26px; color: var(--wine); }
+.seg { display: flex; justify-content: center; align-items: flex-start; gap: clamp(4px, 2vw, 14px); }
+.seg div { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.seg b { font-family: "DSEG7", monospace; font-weight: 400; font-size: clamp(36px, 11vw, 64px); line-height: 1; color: var(--wine); letter-spacing: .02em; }
+.seg i { font-style: normal; font-size: clamp(30px, 8vw, 50px); line-height: 1.1; color: var(--wine); }
+.seg span { margin-top: 12px; font-size: 21px; }
+.fams { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 640px; margin: 52px auto 0; }
+.fam h3 { font-family: "Cormorant", serif; font-weight: 600; font-size: 22px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 6px; }
+.fam p { margin: 2px 0; font-size: clamp(18px, 4.6vw, 22px); }
+.fam .fam-addr { font-style: italic; font-size: 17px; opacity: .85; margin-top: 6px; }
+.iv-invite { margin: 46px auto 0; max-width: 620px; font-size: clamp(21px, 5vw, 26px); line-height: 1.45; }
+.iv-couple { font-family: "Great Vibes", cursive; font-size: clamp(48px, 12vw, 76px); line-height: 1.2; margin: 16px 0 0; color: var(--wine); }
+.iv-couple span { font-size: .6em; opacity: .8; }
+.event { max-width: 600px; margin: 46px auto 0; padding-top: 34px; border-top: 1px solid rgba(140, 74, 85, .25); }
+.ev-name { font-family: "Cormorant", serif; font-weight: 600; font-size: clamp(30px, 8vw, 40px); letter-spacing: .06em; text-transform: uppercase; margin: 0 0 10px; }
+.ev-when { margin: 0; font-size: clamp(22px, 5.4vw, 28px); line-height: 1.5; }
+.ev-date { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; margin: 18px auto 0; max-width: 560px; }
+.ev-date span { padding: 10px 0; border-top: 2px solid var(--wine); border-bottom: 2px solid var(--wine); font-size: clamp(20px, 5vw, 28px); text-transform: uppercase; }
+.ev-date b { font-family: "Cormorant", serif; font-weight: 500; font-size: clamp(64px, 17vw, 96px); line-height: 1; }
+.ev-lunar { font-style: italic; margin: 14px 0 0; font-size: clamp(18px, 4.6vw, 22px); }
+.ev-at { font-weight: 600; text-transform: uppercase; letter-spacing: .04em; margin: 26px 0 4px; font-size: clamp(22px, 5.6vw, 28px); }
+.ev-addr { margin: 0; font-size: clamp(21px, 5.2vw, 27px); }
+.route {
+  display: inline-flex; align-items: center; gap: 14px; margin-top: 24px; padding: 14px 40px 14px 28px;
+  color: #fff6f4; text-decoration: none; text-transform: uppercase; font-size: clamp(18px, 4.6vw, 22px); letter-spacing: .04em;
+  background: linear-gradient(115deg, #7d3b47, #b06c76 55%, #8c4a55); border-radius: 40px;
+  box-shadow: 0 10px 26px rgba(140, 74, 85, .35), inset 0 0 0 2px rgba(255, 255, 255, .25);
+}
+.route svg { width: 30px; height: 30px; }
+.iv-thanks { font-family: "Great Vibes", cursive; font-size: clamp(34px, 8vw, 48px); margin: 46px 0 0; }
+.invite, .hero, .thanks { font-variant-numeric: lining-nums; }
+.iv-couple { display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
+.iv-couple span { display: block; margin: -4px 0; }
