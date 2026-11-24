@@ -1,5 +1,7 @@
 # Video cưới — 24.12.2026
 
+**Video:** [video-cuoi-24-12-2026.mp4](video-cuoi-24-12-2026.mp4)
+
 Slideshow 1920×1080, 30fps, dựng từ 26 ảnh cưới (thư mục Google Drive `WEDDING/Vân Anh`) với nhạc nền
 "NHẠC CÔ DÂU CHÚ RỂ LÊN SÂN KHẤU" (bài đầu tiên trong file mix). File `TINH-ANH.mp4` không được dùng.
 
