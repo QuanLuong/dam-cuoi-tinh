@@ -54,7 +54,7 @@ def smooth(t):
 PHOTO_DIR = {}
 
 
-@lru_cache(maxsize=3)
+@lru_cache(maxsize=2)
 def photo(name):
     im = Image.open(os.path.join(MEDIA, PHOTO_DIR[name]))
     return ImageOps.exif_transpose(im).convert("RGB")
@@ -191,7 +191,7 @@ def make_img(spec):
 SRC_SS = 1.5   # ảnh nguồn lớn gấp 1.5 lần khung để thu nhỏ bằng Lanczos -> sắc nét
 
 
-@lru_cache(maxsize=20)
+@lru_cache(maxsize=10)
 def photo_src(name, w, h, fy):
     return cover_crop(name, int(w * SRC_SS), int(h * SRC_SS), fy, 1.08)
 
@@ -463,7 +463,7 @@ def build():
     S.append(Scene(9.0, els, "wipe"))
     # 17. Ảnh tràn khung + câu nói trái
     S.append(Scene(8.5, [
-        P("BTT_2663.jpg", 0, 0, W, H, 0.0, "zoom", 0.12, "out"),
+        P("BTT_2663.jpg", 0, 0, W, H, 0.0, "zoom", 0.34, "out"),
         *LINES("Yêu là cùng nhau đi qua\nnhững ngày nắng,\nnhững ngày mưa.", q, 58, 420, 840, 1.2, fill=(255, 255, 255)),
     ], "blur", date=False))
     # 18. Polaroid 2
@@ -485,7 +485,7 @@ def build():
     S.append(Scene(8.5, els, "fade"))
     # 21. WEDDING khổng lồ + ảnh
     S.append(Scene(9.0, [
-        P("BTT_3183.jpg", 0, 380, W, 700, 0.6, "rise", 0.24, "pan"),
+        P("BTT_3183.jpg", 0, 380, W, 700, 0.6, "rise", 0.32, "pan"),
         T("WEDDING", BOLD, 330, W / 2, 230, 0.1, "reveal", INK, 10),
         T("Our", FANCY, 110, 260, 90, 1.0, "fade", SOFT),
         P("BTT_3324.jpg", 80, 640, 360, 380, 1.6, "up", 0.25),
@@ -577,7 +577,7 @@ def main():
            "-pix_fmt", "yuv420p", "-profile:v", "high", "-c:a", "aac", "-b:a", "192k",
            "-movflags", "+faststart", "-shortest", out]
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    with Pool(min(3, os.cpu_count()), initializer=init, initargs=(media,), maxtasksperchild=40) as pool:
+    with Pool(min(3, os.cpu_count()), initializer=init, initargs=(media,), maxtasksperchild=20) as pool:
         for b in pool.imap(render, range(n), chunksize=FPS):
             ff.stdin.write(b)
     ff.stdin.close()
