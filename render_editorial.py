@@ -148,6 +148,11 @@ def POLAROID(name, cx, cy, w, h, angle, t0, fy=0.3):
     return El("img", cx, cy, t0, "drop", 1.1, make=("polaroid", name, w, h, angle, fy), anchor="mm")
 
 
+def BLURBG(name, tone=1.0, t0=0.0):
+    """Nền toàn khung: chính ảnh đó phóng to, làm mờ (tone <1 tối hơn, >1 sáng hơn)."""
+    return El("img", 0, 0, t0, "fade", 0.8, make=("blurbg", name, tone), anchor="lt")
+
+
 def MASK(word, size, cx, cy, name, t0=0.0, fy=0.35, spacing=0):
     return El("mask", cx, cy, t0, "fade", 1.4, word=word, size=size, name=name, fy=fy, spacing=spacing)
 
@@ -164,6 +169,14 @@ def make_img(spec):
             sh.putalpha(a.point(lambda v: min(255, int(v * 1.6))))
             im = Image.alpha_composite(sh, im)
         return im
+    if kind == "blurbg":
+        _, name, tone = spec
+        im = cover_crop(name, W // 6, H // 6, 0.4, 1.0).filter(ImageFilter.GaussianBlur(6))
+        im = im.resize((W, H), Image.BICUBIC)
+        if tone != 1.0:
+            from PIL import ImageEnhance
+            im = ImageEnhance.Brightness(im).enhance(tone)
+        return im.convert("RGBA")
     if kind == "heart":
         return heart_img(spec[1])
     if kind == "rule":
@@ -398,8 +411,9 @@ def build():
     ], "wipe"))
     # 7. Ảnh tràn khung + câu nói
     S.append(Scene(8.5, [
-        P("BTT_3457.jpg", 0, 0, W, H, 0.0, "fade", 0.30, "in"),
-        *LINES("Tình yêu — đưa anh và em\ntrở thành “chúng ta”.\nBiến mọi “hôm nay”\nthành “ngày tuyệt vời nhất”.", q, 50, 1600, 200, 1.0, fill=INK, step=0.5),
+        BLURBG("BTT_3457.jpg", 1.05),
+        P("BTT_3457.jpg", 1080, 50, 653, 980, 0.2, "zoom", 0.5, "in"),
+        *LINES("Tình yêu — đưa anh và em\ntrở thành “chúng ta”.\nBiến mọi “hôm nay”\nthành “ngày tuyệt vời nhất”.", q, 62, 560, 540, 1.0, fill=INK, step=0.5),
     ], "fade", date=False))
     # 8. Polaroid nghiêng + câu nói
     S.append(Scene(8.5, [
@@ -463,8 +477,9 @@ def build():
     S.append(Scene(9.0, els, "wipe"))
     # 17. Ảnh tràn khung + câu nói trái
     S.append(Scene(8.5, [
-        P("BTT_2663.jpg", 0, 0, W, H, 0.0, "zoom", 0.34, "out"),
-        *LINES("Yêu là cùng nhau đi qua\nnhững ngày nắng,\nnhững ngày mưa.", q, 58, 420, 840, 1.2, fill=(255, 255, 255)),
+        BLURBG("BTT_2663.jpg", 0.7),
+        P("BTT_2663.jpg", 180, 50, 653, 980, 0.2, "zoom", 0.5, "out"),
+        *LINES("Yêu là cùng nhau đi qua\nnhững ngày nắng,\nnhững ngày mưa.", q, 66, 1360, 540, 1.2, fill=(255, 255, 255)),
     ], "blur", date=False))
     # 18. Polaroid 2
     S.append(Scene(8.5, [
@@ -485,10 +500,11 @@ def build():
     S.append(Scene(8.5, els, "fade"))
     # 21. WEDDING khổng lồ + ảnh
     S.append(Scene(9.0, [
-        P("BTT_3183.jpg", 0, 380, W, 700, 0.6, "rise", 0.32, "pan"),
+        P("BTT_3324.jpg", 290, 400, 440, 660, 0.5, "rise", 0.5),
+        P("BTT_3183.jpg", 740, 400, 440, 660, 0.75, "rise", 0.5),
+        P("BTT_3093.jpg", 1190, 400, 440, 660, 1.0, "rise", 0.5),
         T("WEDDING", BOLD, 330, W / 2, 230, 0.1, "reveal", INK, 10),
         T("Our", FANCY, 110, 260, 90, 1.0, "fade", SOFT),
-        P("BTT_3324.jpg", 80, 640, 360, 380, 1.6, "up", 0.25),
     ], "push", date=False))
     # 22. Save the Date
     S.append(Scene(10.5, [
