@@ -396,7 +396,7 @@ def build():
     S.append(Scene(8.5, [
         P("BTT_2877.jpg", 120, 170, 520, 760, 0.1, "left", 0.3),
         P("BTT_2663.jpg", 740, 0, 1180, H, 0.4, "fade", 0.2, "in", "left"),
-        *LINES("Ngày gặp phút này,\nchúng ta vẫn yêu, và vẫn được yêu.", q, 46, 1330, 900, 1.8, fill=(255, 255, 255)),
+        *LINES("Ngày gặp phút này,\nchúng ta vẫn yêu, và vẫn được yêu.", q, 38, 380, 1000, 1.8, gap=50),
     ], "iris", date=False))
     # 5. Lưới 4 ảnh + câu nói
     g = [("BTT_3068.jpg", 0.3), ("BTT_3093.jpg", 0.25), ("BTT_3104.jpg", 0.3), ("BTT_3134.jpg", 0.3)]
@@ -442,9 +442,8 @@ def build():
         T("I love you", SCRIPT_B, 64, W / 2, 70, 0.3, "fade"),
         RULE(600, 800, 74, 0.3), RULE(1120, 1320, 74, 0.3),
         T("ROMANTIC", BOLD, 330, W / 2, 300, 0.2, "reveal", INK, 6),
-        P("BTT_3374.jpg", 0, 430, W, 650, 0.9, "rise", 0.3, "pan"),
-        P("BTT_3381.jpg", 1460, 640, 380, 380, 1.8, "up", 0.25),
-        *LINES("Chỉ cần người ấy kề bên,\nmọi điều giản dị cũng trở nên tuyệt vời.", q, 40, 1080, 1000, 2.2, fill=(255, 255, 255), step=0.35),
+        P("BTT_3374.jpg", 0, 430, W, 650, 0.9, "rise", 0.24, "in"),
+        P("BTT_3381.jpg", 60, 700, 340, 340, 1.8, "up", 0.25),
     ], "slide_up", date=False))
     # 12. Ba dải ảnh dọc
     els = [P(n, 760 + i * 380, 0, 360, H, 0.15 + i * 0.3, "rise", 0.3) for i, n in enumerate(["BTT_3397.jpg", "BTT_3439.jpg", "BTT_2832.jpg"])]
