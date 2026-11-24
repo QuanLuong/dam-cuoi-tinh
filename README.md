@@ -22,3 +22,15 @@ python3 render_video.py <thư_mục_media> preview_dir --preview   # chỉ xuấ
 
 `<thư_mục_media>` chứa `WEDDING/...` và `Nhạc Cưới/...` tải từ Drive.
 Font (Google Fonts, giấy phép OFL) nằm trong `fonts/`.
+
+## Website thiệp mời (GitHub Pages)
+
+Mỗi khách có một trang riêng ghi tên mình, kèm video, đếm ngược, thông tin tiệc và album ảnh.
+
+- `wedding.json`: tên cô dâu chú rể, giờ, địa điểm, link bản đồ… (để trống thì tự ẩn)
+- `guests.csv`: danh sách khách, mỗi dòng gồm `xung_ho,ten,duong_dan` (cột `duong_dan` có thể bỏ trống, khi đó link được tạo tự động từ tên, ví dụ "Anh Nam" → `/anh-nam/`)
+
+Sửa hai file trên rồi push, GitHub Actions sẽ tự dựng lại trang. Danh sách link của từng khách nằm ở mục
+**Actions → lần chạy mới nhất → Summary**.
+
+Bật lần đầu: **Settings → Pages → Source: GitHub Actions** (repo cần ở chế độ Public nếu dùng tài khoản miễn phí).
