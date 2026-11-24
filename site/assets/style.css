@@ -271,3 +271,42 @@ select.pill { padding-right: 46px; text-overflow: ellipsis; }
   100% { transform: translate(var(--dx, 0), -90px) scale(1); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .music.on svg { animation: none; } .music .notes { display: none; } }
+
+/* ---------- màn hình mở thiệp (chạm 1 lần để phát nhạc) ---------- */
+.gate {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 22px; cursor: pointer;
+  background:
+    var(--paper),
+    radial-gradient(70vw 60vh at 20% 15%, rgba(232, 196, 187, .55), transparent 70%),
+    radial-gradient(70vw 60vh at 85% 85%, rgba(217, 191, 140, .35), transparent 70%),
+    var(--cream);
+  transition: opacity .9s ease, visibility .9s;
+}
+.gate.open { opacity: 0; visibility: hidden; }
+.gate.open .gate-card { transform: scale(1.06); }
+.gate-card {
+  position: relative; width: min(420px, 100%); padding: 52px 28px 44px; text-align: center;
+  background: rgba(255, 252, 247, .85); border: 1px solid var(--line); outline: 1px solid var(--line); outline-offset: 7px;
+  box-shadow: 0 30px 70px rgba(120, 80, 60, .18); transition: transform .9s ease; animation: up 1.2s ease both;
+}
+.gate-card::before, .gate-card::after { content: ""; position: absolute; width: 60px; height: 60px; background: var(--corner) center / contain no-repeat; }
+.gate-card::before { top: -13px; left: -13px; }
+.gate-card::after { bottom: -13px; right: -13px; transform: rotate(180deg); }
+.gate .eyebrow { color: var(--gold); }
+.gate-to { font-style: italic; font-size: 22px; margin: 18px 0 0; color: var(--muted); }
+.gate-name {
+  font-family: "Great Vibes", cursive; font-size: clamp(46px, 12vw, 64px); line-height: 1.2; margin: 0 0 26px; padding: 0 .15em;
+  background: var(--foil); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer 9s ease-in-out infinite alternate;
+}
+.seal {
+  width: 84px; height: 84px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center; margin: 0 auto;
+  background: radial-gradient(circle at 35% 30%, #c9727c, #9a4652 60%, #7a2f3b);
+  box-shadow: 0 10px 24px rgba(122, 47, 59, .4), inset 0 -4px 10px rgba(0, 0, 0, .25), inset 0 3px 6px rgba(255, 255, 255, .25);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+.seal span { font-size: 34px; color: #f6d9d2; text-shadow: 0 1px 2px rgba(0, 0, 0, .35); }
+@keyframes pulse { 50% { transform: scale(1.07); box-shadow: 0 14px 32px rgba(122, 47, 59, .5), inset 0 -4px 10px rgba(0, 0, 0, .25); } }
+.gate-hint { margin-top: 18px; color: var(--muted); }
+.gate-date { font-weight: 600; font-size: 26px; letter-spacing: .1em; color: var(--gold); margin: 10px 0 0; }
+body.locked { overflow: hidden; }

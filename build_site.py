@@ -95,6 +95,17 @@ def page(cfg, guest, base, site_url):
                      f'Chỉ đường</a>')
         places += f'<div class="card place"><p class="caps gold">Tư gia</p><h3 class="script pl-name">{label}</h3>{body}</div>'
     rsvp_url = esc(cfg.get("rsvp_url", ""))
+    gate = (f'''<div class="gate" role="dialog" aria-label="Mở thiệp mời">
+  <div class="gate-card">
+    <p class="eyebrow">Thiệp mời đám cưới</p>
+    <p class="gate-to">Gửi</p>
+    <p class="gate-name">{esc(who) if who else "Bạn thân mến"}</p>
+    <button class="seal" type="button" aria-label="Mở thiệp"><span>♥</span></button>
+    <p class="caps gate-hint">Chạm để mở thiệp</p>
+    <p class="gate-date">{date_txt}</p>
+  </div>
+</div>'''
+            if cfg.get("nhac_nen") else "")
     music = cfg.get("nhac_nen", "").strip()
     if music and not re.match(r"^https?://", music):
         music = base + music.lstrip("/")
@@ -206,6 +217,7 @@ def page(cfg, guest, base, site_url):
   </section>
 </main>
 
+{gate}
 {music_btn}
 <div class="petals" aria-hidden="true"></div>
 <dialog id="lb"><img alt=""><button class="x" aria-label="Đóng">×</button></dialog>

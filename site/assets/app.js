@@ -88,7 +88,17 @@
       ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.removeEventListener(ev, kick); });
     };
     ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (ev) { window.addEventListener(ev, kick, { passive: true }); });
-    play();  // thử tự phát (một số trình duyệt cho phép)
+    play();  // thử tự phát ngay (trình duyệt cho phép thì nhạc chạy luôn)
+    // Màn hình "Mở thiệp": chạm 1 lần là phát nhạc ngay (lách chặn tự phát của điện thoại)
+    var gate = document.querySelector(".gate");
+    if (gate) {
+      document.body.classList.add("locked");
+      gate.addEventListener("click", function () {
+        userOff = false; play();
+        gate.classList.add("open"); document.body.classList.remove("locked");
+        setTimeout(function () { gate.remove(); }, 1000);
+      });
+    }
     // tạm dừng nhạc khi xem video cưới, phát lại khi video dừng
     var vid = document.querySelector("video");
     if (vid) {
