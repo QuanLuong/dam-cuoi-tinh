@@ -398,8 +398,8 @@ def build():
     ], "wipe"))
     # 7. Ảnh tràn khung + câu nói
     S.append(Scene(8.5, [
-        P("BTT_3457.jpg", 0, 0, W, H, 0.0, "fade", 0.2, "in"),
-        *LINES("Tình yêu — đưa anh và em\ntrở thành “chúng ta”.\nBiến mọi “hôm nay”\nthành “ngày tuyệt vời nhất”.", q, 54, 1500, 560, 1.0, fill=INK, step=0.5),
+        P("BTT_3457.jpg", 0, 0, W, H, 0.0, "fade", 0.30, "in"),
+        *LINES("Tình yêu — đưa anh và em\ntrở thành “chúng ta”.\nBiến mọi “hôm nay”\nthành “ngày tuyệt vời nhất”.", q, 50, 1600, 200, 1.0, fill=INK, step=0.5),
     ], "fade", date=False))
     # 8. Polaroid nghiêng + câu nói
     S.append(Scene(8.5, [
