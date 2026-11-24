@@ -54,7 +54,7 @@ def smooth(t):
 PHOTO_DIR = {}
 
 
-@lru_cache(maxsize=64)
+@lru_cache(maxsize=3)
 def photo(name):
     im = Image.open(os.path.join(MEDIA, PHOTO_DIR[name]))
     return ImageOps.exif_transpose(im).convert("RGB")
@@ -188,9 +188,12 @@ def make_img(spec):
     raise ValueError(kind)
 
 
-@lru_cache(maxsize=96)
+SRC_SS = 1.5   # ảnh nguồn lớn gấp 1.5 lần khung để thu nhỏ bằng Lanczos -> sắc nét
+
+
+@lru_cache(maxsize=20)
 def photo_src(name, w, h, fy):
-    return cover_crop(name, w, h, fy, 1.08)
+    return cover_crop(name, int(w * SRC_SS), int(h * SRC_SS), fy, 1.08)
 
 
 @lru_cache(maxsize=48)
@@ -292,7 +295,12 @@ def kb_frame(src, w, h, u, kb):
         s = src.width / 1.08 / w
         x0 = (src.width - w * s) * e
         y0 = (src.height - h * s) / 2
-    return src.transform((w, h), Image.AFFINE, (s, 0, x0, 0, s, y0), Image.BILINEAR)
+    # thu nhỏ có khử răng cưa từ vùng nguồn (toạ độ lẻ -> chuyển động mượt)
+    x0 = min(max(x0, 0.0), src.width - w * s)
+    y0 = min(max(y0, 0.0), src.height - h * s)
+    x0, y0 = max(x0, 0.0), max(y0, 0.0)
+    return src.resize((w, h), Image.LANCZOS,
+                      box=(x0, y0, min(x0 + w * s, src.width), min(y0 + h * s, src.height)))
 
 
 def draw_el(canvas, el, t, dur):
@@ -565,11 +573,11 @@ def main():
            "-ss", str(MUSIC_START), "-t", f"{TOTAL:.3f}", "-i", music,
            "-filter_complex", f"[1:a]afade=t=in:d=1.0,afade=t=out:st={TOTAL - 5:.3f}:d=5[a]",
            "-map", "0:v", "-map", "[a]",
-           "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-tune", "film",
+           "-vf", "unsharp=5:5:0.45:5:5:0", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-tune", "film",
            "-pix_fmt", "yuv420p", "-profile:v", "high", "-c:a", "aac", "-b:a", "192k",
            "-movflags", "+faststart", "-shortest", out]
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    with Pool(os.cpu_count(), initializer=init, initargs=(media,)) as pool:
+    with Pool(min(3, os.cpu_count()), initializer=init, initargs=(media,), maxtasksperchild=40) as pool:
         for b in pool.imap(render, range(n), chunksize=FPS):
             ff.stdin.write(b)
     ff.stdin.close()

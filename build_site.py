@@ -173,7 +173,7 @@ def page(cfg, guest, base, site_url):
     <h2 class="script">Our Story</h2>
     <div class="frame">
       <video controls playsinline preload="metadata" poster="{base}assets/img/poster.jpg">
-        <source src="{base}assets/video/video-cuoi-720p.mp4" type="video/mp4">
+        <source src="{base}assets/video/video-cuoi.mp4" type="video/mp4">
       </video>
     </div>
   </section>
@@ -232,6 +232,9 @@ def main():
     if os.path.isdir(out):
         shutil.rmtree(out)
     shutil.copytree(os.path.join(HERE, "site"), out)
+    # video 1080p chất lượng cao dùng chung với file trong repo (không nén lại)
+    os.makedirs(os.path.join(out, "assets", "video"), exist_ok=True)
+    shutil.copy2(os.path.join(HERE, "video-cuoi-24-12-2026.mp4"), os.path.join(out, "assets", "video", "video-cuoi.mp4"))
     with open(os.path.join(out, "index.html"), "w", encoding="utf-8") as f:
         f.write(page(cfg, None, "", site_url))
     links = []
