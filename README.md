@@ -5,7 +5,7 @@
 Slideshow 1920×1080, 30fps, dựng từ 26 ảnh cưới (thư mục Google Drive `WEDDING/Vân Anh`) với nhạc nền
 "NHẠC CÔ DÂU CHÚ RỂ LÊN SÂN KHẤU" (bài đầu tiên trong file mix). File `TINH-ANH.mp4` không được dùng.
 
-Bố cục video (~2 phút 57 giây), có 8 kiểu chuyển cảnh: đẩy ngang, mở vòng tròn, zoom, lau chéo, chớp sáng, nhòe mờ, trượt lên, vệt nắng:
+Video (~3 phút) phong cách tạp chí, dựng bằng `render_editorial.py`: chữ LOVE/FOREVER lồng ảnh, bố cục nhiều ảnh, chữ ROMANTIC/WEDDING khổng lồ, polaroid, câu nói viết tay. Bản cũ (slideshow) dựng bằng `render_video.py`:
 - **Intro**: "Save the Date — Chúng mình kết hôn — 24 . 12 . 2026 — Thứ Năm"
 - **Ảnh**: theo thứ tự chụp, xen kẽ 3 kiểu cảnh: ảnh có khung trên nền mờ, ảnh cận cảnh tràn màn hình
   (lia máy chậm), và cảnh chia đôi có chữ ("Gặp gỡ", "Yêu thương", "Hẹn ước", "Ngày chung đôi").
