@@ -403,3 +403,22 @@ dialog#lb img.in { animation: lbIn .6s ease; }
 .lb-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(255, 255, 255, .15); }
 .lb-bar i { display: block; height: 100%; width: 100%; background: #dec496; transform-origin: left; animation: lbBar 5s linear forwards; }
 @keyframes lbBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ---------- khung ảnh tự chạy (thay lưới album) ---------- */
+.slider { position: relative; display: block; max-width: 460px; margin: 0 auto; }
+.sl-frame {
+  position: relative; aspect-ratio: 2 / 3; padding: 8px; background: #fffdf9; cursor: zoom-in; overflow: hidden;
+  box-shadow: 0 22px 56px rgba(120, 80, 60, .2); border: 1px solid var(--line);
+}
+.sl-img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: cover; opacity: 0; transition: opacity 1s ease, transform 6s ease; transform: scale(1.04); }
+.sl-img.on { opacity: 1; transform: scale(1); }
+.sl-bar { position: absolute; left: 8px; right: 8px; bottom: 8px; height: 3px; background: rgba(255, 255, 255, .35); }
+.sl-bar i { display: block; height: 100%; background: #dec496; transform-origin: left; animation: lbBar 5s linear forwards; }
+.sl-prev, .sl-next {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 2;
+  border: 1px solid var(--line); background: rgba(255, 253, 249, .9); color: var(--gold); font-size: 30px; line-height: 1;
+  box-shadow: 0 6px 16px rgba(120, 80, 60, .18);
+}
+.sl-prev { left: -14px; } .sl-next { right: -14px; }
+@media (max-width: 520px) { .sl-prev { left: 4px; } .sl-next { right: 4px; } }
+.sl-count { margin: 14px 0 0; font-family: "Prata", serif; font-size: 16px; letter-spacing: .12em; color: var(--muted); }

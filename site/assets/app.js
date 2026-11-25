@@ -126,9 +126,43 @@
       clearTimeout(timer); timer = setTimeout(function () { show(cur + 1); }, DELAY);
     };
     var close = function () { clearTimeout(timer); if (lb.open) lb.close(); };
-    album.querySelectorAll(".ph").forEach(function (b) {
-      b.addEventListener("click", function () { lb.showModal(); show(+b.dataset.i); });
+    // khung ảnh tự chạy ngay trên trang
+    var imgs = album.querySelectorAll(".sl-img"), scount = album.querySelector(".sl-count"),
+        sbar = album.querySelector(".sl-bar i"), si = 0, stimer = null, front = 0, visible = true;
+    var slide = function (i) {
+      si = (i + list.length) % list.length;
+      var nxt = imgs[1 - front];
+      nxt.onload = function () {
+        nxt.classList.add("on"); imgs[front].classList.remove("on"); front = 1 - front;
+        nxt.alt = "Ảnh cưới"; imgs[1 - front].alt = "";
+      };
+      nxt.src = list[si];
+      scount.textContent = (si + 1) + " / " + list.length;
+      new Image().src = list[(si + 1) % list.length];
+      sbar.style.animation = "none"; void sbar.offsetWidth; sbar.style.animation = "";
+      clearTimeout(stimer);
+      if (visible && !lb.open) stimer = setTimeout(function () { slide(si + 1); }, DELAY);
+    };
+    album.querySelector(".sl-next").addEventListener("click", function () { slide(si + 1); });
+    album.querySelector(".sl-prev").addEventListener("click", function () { slide(si - 1); });
+    album.querySelector(".sl-frame").addEventListener("click", function () {
+      clearTimeout(stimer); lb.showModal(); show(si);
     });
+    var ax = null;
+    album.addEventListener("touchstart", function (e) { ax = e.touches[0].clientX; }, { passive: true });
+    album.addEventListener("touchend", function (e) {
+      if (ax === null) return;
+      var dx = e.changedTouches[0].clientX - ax; ax = null;
+      if (Math.abs(dx) > 40) { e.preventDefault(); slide(dx < 0 ? si + 1 : si - 1); }
+    });
+    if ("IntersectionObserver" in window) {        // chỉ tự chạy khi album đang hiện trên màn hình
+      new IntersectionObserver(function (es) {
+        visible = es[0].isIntersecting;
+        clearTimeout(stimer);
+        if (visible && !lb.open) stimer = setTimeout(function () { slide(si + 1); }, DELAY);
+      }, { threshold: 0.3 }).observe(album);
+    }
+    lb.addEventListener("close", function () { slide(cur); });   // đóng xem lớn -> album tiếp tục từ ảnh đang xem
     lb.querySelector(".lb-next").addEventListener("click", function (e) { e.stopPropagation(); show(cur + 1); });
     lb.querySelector(".lb-prev").addEventListener("click", function (e) { e.stopPropagation(); show(cur - 1); });
     lb.querySelector(".x").addEventListener("click", function (e) { e.stopPropagation(); close(); });
