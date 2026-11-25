@@ -83,7 +83,7 @@ def invite_html(cfg, who):
       <div><b id="m">00</b><span>Phút</span></div><i>:</i>
       <div><b id="s">00</b><span>Giây</span></div>
     </div>
-    <div class="fams">{fam("nha_trai", "Nhà Trai")}{fam("nha_gai", "Nhà Gái")}</div>
+    <div class="fams">{fam("nha_gai", "Nhà Gái")}{fam("nha_trai", "Nhà Trai")}</div>
     <p class="iv-invite">Trân trọng kính mời {guest_line}<br>tới dự bữa cơm thân mật mừng lễ thành hôn của hai con chúng tôi</p>
     <p class="iv-couple">{esc(cfg.get("chu_re", ""))}<span>&amp;</span>{esc(cfg.get("co_dau", ""))}</p>
     {events}
