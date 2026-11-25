@@ -127,10 +127,15 @@ def page(cfg, guest, base, site_url):
                  '<ellipse cx="6.6" cy="17.6" rx="2.6" ry="2.1" fill="currentColor"/><ellipse cx="16.6" cy="15.4" rx="2.6" ry="2.1" fill="currentColor"/></svg>'
                  '<span class="notes" aria-hidden="true"></span></button>') if music else ""
     guest_tag = esc(f"{guest['xung_ho']} {guest['ten']}".strip() if guest else "")
-    gallery = "".join(
-        f'<button class="ph" data-full="{base}assets/img/g{i:02d}.jpg" aria-label="Xem ảnh {i}">'
-        f'<img src="{base}assets/img/g{i:02d}.jpg" alt="Ảnh cưới {i}" loading="lazy"></button>'
-        for i in range(1, 15))
+    n_img, n_show = 14, 6
+    full_list = ",".join(f"{base}assets/img/g{i:02d}.jpg" for i in range(1, n_img + 1))
+    gallery = ""
+    for i in range(1, n_show + 1):
+        more = (f'<span class="more">+{n_img - n_show}<small>ảnh</small></span>'
+                if i == n_show and n_img > n_show else "")
+        gallery += (f'<button class="ph" data-i="{i - 1}" aria-label="Xem album, ảnh {i}">'
+                    f'<img src="{base}assets/img/t{i:02d}.jpg" alt="Ảnh cưới {i}" loading="lazy">{more}</button>')
+    gallery = f'<div class="album" data-list="{full_list}">{gallery}</div>'
     og_img = f"{site_url}/assets/img/og.jpg" if site_url else f"{base}assets/img/og.jpg"
     robots = '<meta name="robots" content="noindex">' if guest else ""
     loi_moi = esc(cfg.get("loi_moi", ""))
@@ -204,7 +209,7 @@ def page(cfg, guest, base, site_url):
 
   <section class="gallery">
     <h2 class="script">Khoảnh khắc</h2>
-    <div class="grid">{gallery}</div>
+    {gallery}
   </section>
 
   <section class="thanks">
@@ -217,7 +222,14 @@ def page(cfg, guest, base, site_url):
 {gate}
 {music_btn}
 <div class="petals" aria-hidden="true"></div>
-<dialog id="lb"><img alt=""><button class="x" aria-label="Đóng">×</button></dialog>
+<dialog id="lb" aria-label="Album ảnh cưới">
+  <div class="lb-bar"><i></i></div>
+  <p class="lb-count"></p>
+  <img alt="Ảnh cưới">
+  <button class="lb-prev" aria-label="Ảnh trước">‹</button>
+  <button class="lb-next" aria-label="Ảnh sau">›</button>
+  <button class="x" aria-label="Đóng">×</button>
+</dialog>
 <script src="{base}assets/app.js"></script>
 </body>
 </html>

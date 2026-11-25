@@ -111,13 +111,45 @@
     });
   }
 
-  // Xem ảnh lớn
-  var lb = document.getElementById("lb");
-  if (lb && lb.showModal) {
-    var img = lb.querySelector("img");
-    document.querySelectorAll(".ph").forEach(function (b) {
-      b.addEventListener("click", function () { img.src = b.dataset.full; lb.showModal(); });
+  // Album: chạm ảnh -> xem toàn màn hình, tự chuyển sau 5 giây, bấm/vuốt để chuyển ngay
+  var lb = document.getElementById("lb"), album = document.querySelector(".album");
+  if (lb && lb.showModal && album) {
+    var list = album.dataset.list.split(","), cur = 0, timer = null, DELAY = 5000;
+    var img = lb.querySelector("img"), count = lb.querySelector(".lb-count"), bar = lb.querySelector(".lb-bar i");
+    var show = function (i) {
+      cur = (i + list.length) % list.length;
+      img.classList.remove("in"); void img.offsetWidth;
+      img.src = list[cur]; img.classList.add("in");
+      count.textContent = (cur + 1) + " / " + list.length;
+      new Image().src = list[(cur + 1) % list.length];          // tải trước ảnh kế tiếp
+      bar.style.animation = "none"; void bar.offsetWidth; bar.style.animation = "";
+      clearTimeout(timer); timer = setTimeout(function () { show(cur + 1); }, DELAY);
+    };
+    var close = function () { clearTimeout(timer); if (lb.open) lb.close(); };
+    album.querySelectorAll(".ph").forEach(function (b) {
+      b.addEventListener("click", function () { lb.showModal(); show(+b.dataset.i); });
     });
-    lb.addEventListener("click", function () { lb.close(); });
+    lb.querySelector(".lb-next").addEventListener("click", function (e) { e.stopPropagation(); show(cur + 1); });
+    lb.querySelector(".lb-prev").addEventListener("click", function (e) { e.stopPropagation(); show(cur - 1); });
+    lb.querySelector(".x").addEventListener("click", function (e) { e.stopPropagation(); close(); });
+    img.addEventListener("click", function (e) {                 // chạm nửa trái/phải ảnh
+      e.stopPropagation();
+      var r = img.getBoundingClientRect();
+      show(e.clientX < r.left + r.width / 2 ? cur - 1 : cur + 1);
+    });
+    lb.addEventListener("click", close);                          // chạm nền tối để đóng
+    lb.addEventListener("close", function () { clearTimeout(timer); });
+    var sx = null;
+    lb.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener("touchend", function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) { e.preventDefault(); show(dx < 0 ? cur + 1 : cur - 1); }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (!lb.open) return;
+      if (e.key === "ArrowRight") show(cur + 1);
+      if (e.key === "ArrowLeft") show(cur - 1);
+    });
   }
 })();
