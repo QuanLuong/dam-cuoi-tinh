@@ -354,3 +354,27 @@ body.locked { overflow: hidden; }
 .invite, .hero, .thanks { font-variant-numeric: lining-nums; }
 .iv-couple { display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
 .iv-couple span { display: block; margin: -4px 0; }
+
+/* font thiệp mời giống mẫu: Prata (chữ có chân nét thanh-đậm) + Corinthia (viết tay mảnh) */
+@font-face { font-family: "Prata"; src: url(fonts/Prata-Regular.ttf); font-display: swap; }
+@font-face { font-family: "Corinthia"; src: url(fonts/Corinthia-Regular.ttf); font-display: swap; }
+.invite { font-family: "Prata", Georgia, serif; font-size: 19px; }
+.invite .iv-script, .invite .iv-couple, .invite .iv-thanks { font-family: "Corinthia", cursive; font-weight: 400; }
+.invite .iv-script { font-size: clamp(44px, 11.5vw, 72px); line-height: 1.05; }
+.invite .iv-couple { font-size: clamp(64px, 17vw, 100px); line-height: 1.05; }
+.invite .iv-thanks { font-size: clamp(44px, 11vw, 64px); }
+.invite .seg span { font-family: "Prata", serif; font-size: 18px; }
+.invite .fam h3 { font-family: "Prata", serif; font-weight: 400; font-size: clamp(19px, 4.8vw, 23px); letter-spacing: .02em; margin-bottom: 8px; }
+.invite .fam p { font-size: clamp(16px, 4.1vw, 20px); margin: 4px 0; }
+.invite .iv-invite { font-size: clamp(18px, 4.6vw, 23px); line-height: 1.7; }
+.invite .ev-name { font-family: "Prata", serif; font-weight: 400; font-size: clamp(26px, 7vw, 36px); letter-spacing: .02em; }
+.invite .ev-when { font-size: clamp(19px, 5vw, 25px); line-height: 1.7; }
+.invite .ev-date span { font-size: clamp(17px, 4.4vw, 24px); }
+.invite .ev-date b { font-family: "Prata", serif; font-weight: 400; font-size: clamp(60px, 16vw, 92px); }
+.invite .ev-lunar { font-family: "Cormorant", serif; font-style: italic; font-size: clamp(18px, 4.6vw, 22px); }
+.invite .ev-at { font-weight: 400; font-size: clamp(19px, 5vw, 25px); }
+.invite .ev-addr { font-size: clamp(17px, 4.5vw, 23px); line-height: 1.5; }
+.invite .route { font-family: "Prata", serif; font-size: clamp(16px, 4.2vw, 20px); }
+.invite .fams { gap: 6px; max-width: 700px; }
+.invite .fam p { white-space: nowrap; font-size: clamp(13px, 3.45vw, 20px); }
+@media (max-width: 359px) { .invite .fams { grid-template-columns: 1fr; gap: 22px; } .invite .fam p { font-size: 16px; } }
